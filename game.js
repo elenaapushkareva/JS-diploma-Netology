@@ -90,11 +90,7 @@ class Level {
 	}
 
 	isFinished() {
-		if (this.status !== null && this.finishDelay < 0) {
-			return true;
-		} else {
-		  return false;
-		}
+		return this.status !== null && this.finishDelay < 0;
 	}
 
 	actorAt(actor) {
@@ -102,11 +98,7 @@ class Level {
 			throw new Error(`В качестве аргумента необходимо передать объект типа Actor`);
 		}
 		
-		if (!this.actors) {
-      return undefined;
-    } else {
-      return this.actors.find(currentActor => currentActor.isIntersect(actor));
-    }
+		return this.actors.find(currentActor => currentActor.isIntersect(actor));
 	}
 
 	obstacleAt(pos, size) {
@@ -128,7 +120,7 @@ class Level {
 		for (let i = topBorder; i < bottomBorder; i++) {
 			for (let j = leftBorder; j < rightBorder; j++) {
 				let obstacle = this.grid[i][j];
-				if (obstacle !== undefined) {
+				if (obstacle) {
 					return obstacle;
 				}
 			}
@@ -140,14 +132,7 @@ class Level {
 	}
 
 	noMoreActors(type) {
-		if (this.actors) {
-			for (let actor of this.actors) {
-				if (actor.type === type) {
-					return false;
-				}
-			}
-		}
-		return true;
+		return this.actors.findIndex(el => el.type === type) === -1;
 	}
 
 	playerTouched(type, actor) {
@@ -222,12 +207,10 @@ class LevelParser {
 }
 
 class Player extends Actor {
-  constructor(pos) {
-    super(pos);
-    this.pos = this.pos.plus(new Vector(0, -0.5));
-    this.size = new Vector(0.8, 1.5);
-    this.speed = new Vector(0, 0);
+  constructor(pos = new Vector(0, 0)) {
+	super(pos.plus(new Vector(0, -0.5)), new Vector(0.8, 1.5));
   }
+
 
   get type() {
     return 'player';
